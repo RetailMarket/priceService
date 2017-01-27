@@ -31,19 +31,17 @@ func CloseDb() {
 
 func SavePriceInUpdateApprovalTable(priceList []*workFlow.Product) error {
 	fmt.Println("Inserting record into updatePriceApproval table...")
-	insertQuery := "insert into workflow.priceUpdateApproval (product_id, product_name,cost,status) values($1,$2,$3,$4)"
+	insertQuery := "insert into workflow.priceUpdateApproval (product_id, version) values($1,$2)"
 
 	for i := 0; i < len(priceList); i++ {
 		priceObj := priceList[i];
 		_, err := db.Exec(
 			insertQuery,
 			priceObj.ProductId,
-			priceObj.ProductName,
-			priceObj.Cost,
-			priceObj.Status)
+			priceObj.Version)
 		if (err != nil) {
+			log.Fatalf("Unable to save update entry in db for approval \nError: %v", err.Error());
 			return err;
-			//log.Fatalf("Unable to save update entry in db for approval \nError: %v", err.Error());
 		}
 	}
 	return nil;
