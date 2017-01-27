@@ -1,10 +1,7 @@
-
 -- +goose Up
 CREATE TABLE PriceUpdateApproval (
-  product_id 				  int not null,
-  product_name			  text not null,
-  cost				        float not null,
-  status			        text not null
+  product_id INT  NOT NULL,
+  version    TEXT NOT NULL
 );
 -- SQL in section 'Up' is executed when this migration is applied
 
