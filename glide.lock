@@ -1,53 +1,38 @@
-hash: ab4085dc59760a1454797e7bc66fc5daa1dced130a489854a08a3285f99ef579
-updated: 2017-01-24T18:55:09.920139257+05:30
+hash: 870125424ae5b91671391bffdda6daf8c887b7d839d22952dbac9d75c55bde0a
+updated: 2017-01-27T10:38:43.917462441+05:30
 imports:
 - name: github.com/bmizerany/pq
   version: da2b95e392c172df0be322eadc19a90b0f771548
-- name: github.com/gin-gonic/gin
-  version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
-  subpackages:
-  - binding
-  - render
 - name: github.com/golang/protobuf
-  version: 2402d76f3d41f928c7902a765dfc872356dd3aad
+  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
   subpackages:
   - proto
   - protoc-gen-go/descriptor
-- name: github.com/manucorporat/sse
-  version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
-- name: github.com/mattn/go-isatty
-  version: 30a891c33c7cde7b02a981314b4228ec99380cca
 - name: github.com/RetailMarket/workFlowClient
-  version: 870f1f04fed40c24f878cf21c5aba45e5a494426
+  version: 9896562e92fe077c1322fdc42639183a68040d47
 - name: golang.org/x/net
-  version: f315505cf3349909cdf013ea56690da34e96a451
+  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
   subpackages:
   - context
   - http2
-  - trace
   - http2/hpack
+  - idna
   - internal/timeseries
-- name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
-  subpackages:
-  - unix
+  - lex/httplex
+  - trace
 - name: google.golang.org/grpc
   version: 50955793b0183f9de69bd78e2ec251cf20aab121
   subpackages:
-  - reflection
   - codes
   - credentials
   - grpclog
   - internal
   - metadata
   - naming
+  - peer
+  - reflection
+  - reflection/grpc_reflection_v1alpha
   - stats
   - tap
   - transport
-  - reflection/grpc_reflection_v1alpha
-  - peer
-- name: gopkg.in/go-playground/validator.v8
-  version: c193cecd124b5cc722d7ee5538e945bdb3348435
-- name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
-devImports: []
+testImports: []
