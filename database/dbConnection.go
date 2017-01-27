@@ -12,6 +12,8 @@ import (
 const (
 	DB_DRIVER = "postgres"
 	DB_CONNECTION = "user=postgres dbname=postgres password=postgres sslmode=disable"
+	SCHEMA = "workflow"
+	UPDATE_APPROVAL_TABLE = "priceUpdateApproval"
 )
 
 var db *sql.DB
@@ -30,15 +32,19 @@ func CloseDb() {
 }
 
 func SavePriceInUpdateApprovalTable(priceList []*workFlow.Product) error {
-	fmt.Println("Inserting record into updatePriceApproval table...")
-	insertQuery := "insert into workflow.priceUpdateApproval (product_id, version) values($1,$2)"
+	fmt.Println("Inserting Record Into UpdatePriceApproval Table...")
 
 	for i := 0; i < len(priceList); i++ {
 		priceObj := priceList[i];
-		_, err := db.Exec(
-			insertQuery,
+		insertQuery := fmt.Sprintf("insert into %s.%s (product_id, version, status) values(%d,'%s','%s')",
+			SCHEMA,
+			UPDATE_APPROVAL_TABLE,
 			priceObj.ProductId,
-			priceObj.Version)
+			priceObj.Version,
+			status.PENDING)
+
+		_, err := db.Exec(
+			insertQuery)
 		if (err != nil) {
 			log.Fatalf("Unable to save update entry in db for approval \nError: %v", err.Error());
 			return err;
@@ -47,14 +53,19 @@ func SavePriceInUpdateApprovalTable(priceList []*workFlow.Product) error {
 	return nil;
 }
 
-func FetchPriceUpdateRequests() {
-	fmt.Println("Inserting record into updatePriceApproval table...")
-	selectQuery := "select * from price.updateApproval where status = $1"
+func GetAllPendingRecords() (*sql.Rows, error) {
+	fmt.Println("Fetching Pending Record From UpdatePriceApproval Table...")
+	selectQuery := fmt.Sprintf("select product_id, version from %s.%s where status = '%s'", SCHEMA, UPDATE_APPROVAL_TABLE, status.PENDING)
+	return db.Query(selectQuery)
+}
 
-	_, err := db.Query(
-		selectQuery, status.PENDING)
-
-	if (err != nil) {
-		log.Fatalf("Unable to fetch update requests from db \nError: %v", err.Error());
+func ChangeStatusTo(status string, records []*workFlow.Product) error {
+	for i := 0; i < len(records); i++ {
+		updateQuery := fmt.Sprintf("update %s.%s set status = '%s' where product_id = %d and version = '%s'", SCHEMA, UPDATE_APPROVAL_TABLE, status, int(records[i].ProductId), records[i].Version)
+		_, err := db.Exec(updateQuery)
+		if (err != nil) {
+			return err;
+		}
 	}
+	return nil;
 }
