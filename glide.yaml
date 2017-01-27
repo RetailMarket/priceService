@@ -1,2 +1,4 @@
 package: Retail/workflow
-import: []
+import:
+ - package: "google.golang.org/grpc"
+ - package: "github.com/RetailMarket/workFlowClient"
