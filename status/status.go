@@ -2,6 +2,5 @@ package status
 
 const (
 	PENDING = "PENDING"
-	APPROVED = "COMPLETED"
-	REJECTED = "REJECTED"
+	COMPLETED = "COMPLETED"
 )
