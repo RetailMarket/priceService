@@ -31,7 +31,7 @@ func CloseDb() {
 	db.Close()
 }
 
-func SavePriceInUpdateApprovalTable(priceList []*workFlow.Product) error {
+func SavePriceInUpdateApprovalTable(priceList []*workFlow.Entry) error {
 	fmt.Println("Inserting Record Into UpdatePriceApproval Table...")
 
 	for i := 0; i < len(priceList); i++ {
@@ -59,7 +59,7 @@ func GetAllPendingRecords() (*sql.Rows, error) {
 	return db.Query(selectQuery)
 }
 
-func ChangeStatusTo(status string, records []*workFlow.Product) error {
+func ChangeStatusTo(status string, records []*workFlow.Entry) error {
 	for i := 0; i < len(records); i++ {
 		updateQuery := fmt.Sprintf("update %s.%s set status = '%s' where product_id = %d and version = '%s'", SCHEMA, UPDATE_APPROVAL_TABLE, status, int(records[i].ProductId), records[i].Version)
 		_, err := db.Exec(updateQuery)

@@ -34,16 +34,10 @@ func CreateServerConnection() {
 	}
 }
 
-func (s *server) SaveUpdatePriceForApproval(ctx context.Context, productsPrice *workflow.ProductsRequest) (*workflow.ProductsResponse, error) {
-	products := productsPrice.GetProducts()
-	err := database.SavePriceInUpdateApprovalTable(products)
-	return &workflow.ProductsResponse{Message: "successfully uploaded data"}, err
-}
-
-func (s *server) GetRecordsPendingForApproval(ctx context.Context, productsPrice *workflow.GetProductsRequest) (*workflow.GetProductsResponse, error) {
+func (s *server) PendingRecords(ctx context.Context, productsPrice *workflow.Request) (*workflow.Records, error) {
 
 	records, err := database.GetAllPendingRecords();
-	response := &workflow.GetProductsResponse{}
+	response := &workflow.Records{}
 	if (err != nil) {
 		log.Printf("Query failed while fetching pending entries for approval \n err: %v", err)
 	} else {
@@ -51,22 +45,28 @@ func (s *server) GetRecordsPendingForApproval(ctx context.Context, productsPrice
 			var product_id int32;
 			var version string;
 			records.Scan(&product_id, &version)
-			record := workflow.Product{
+			record := workflow.Entry{
 				ProductId: product_id,
 				Version: version}
-			response.Products = append(response.Products, &record)
+			response.Entries = append(response.Entries, &record)
 		}
 	}
 	return response, err
 }
 
-func (s *server) UpdateStatusToCompleted(ctx context.Context, request *workflow.ProductsRequest) (*workflow.ProductsResponse, error) {
-	records := request.GetProducts();
+func (s *server) NotifyRecordsPicked(ctx context.Context, productsPrice *workflow.Records) (*workflow.Response, error) {
+	products := productsPrice.GetEntries()
+	err := database.SavePriceInUpdateApprovalTable(products)
+	return &workflow.Response{Message: "successfully uploaded data"}, err
+}
+
+func (s *server) NotifyRecordsProcessed(ctx context.Context, request *workflow.Records) (*workflow.Response, error) {
+	records := request.GetEntries();
 	err := database.ChangeStatusTo(status.COMPLETED, records);
 
-	message := fmt.Sprintf("Successfully changed status of %v to picked", records);
+	message := fmt.Sprintf("Successfully changed status of %v to completed", records);
 	if (err != nil) {
-		message = fmt.Sprintf("Failed to change status of %v to picked", records);
+		message = fmt.Sprintf("Failed to change status of %v to completed", records);
 	}
-	return &workflow.ProductsResponse{Message: message}, err
+	return &workflow.Response{Message: message}, err
 }
