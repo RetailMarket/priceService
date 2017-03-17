@@ -9,13 +9,6 @@ import (
 	workFlow "github.com/RetailMarket/workFlowClient"
 )
 
-const (
-	DB_DRIVER = "postgres"
-	DB_CONNECTION = "user=postgres dbname=postgres password=postgres sslmode=disable"
-	SCHEMA = "workflow"
-	UPDATE_APPROVAL_TABLE = "priceUpdateApproval"
-)
-
 var db *sql.DB
 
 func Init() {
